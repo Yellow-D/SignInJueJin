@@ -1,23 +1,27 @@
+const referer = "https://juejin.cn/";
+const signInUrl = "https://api.juejin.cn/growth_api/v1/check_in";
+const drawUrl = "https://api.juejin.cn/growth_api/v1/lottery/draw";
+const dipUrl = "https://api.juejin.cn/growth_api/v1/lottery_lucky/dip_lucky";
+const userAgent =
+  "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36";
+
 function getNuggetBySecrets(secrets) {
   const config = secrets.split("|");
   return {
+    drawUrl, //抽奖
+    signInUrl, //签到
     historyId: config[2],
-    signInUrl: `https://api.juejin.cn/growth_api/v1/check_in`, //签到
-    drawUrl: `https://api.juejin.cn/growth_api/v1/lottery/draw`, //抽奖
-    dipUrl: `https://api.juejin.cn/growth_api/v1/lottery_lucky/dip_lucky?aid=${config[0]}&uuid=${config[1]}`, //沾喜气
+    dipUrl: `${dipUrl}?aid=${config[0]}&uuid=${config[1]}`, //沾喜气
     headers: {
+      referer,
       cookie: `${config[3]}`,
-      referer: "https://juejin.cn/",
+      "User-Agent": userAgent,
       "Upgrade-Insecure-Requests": 1,
-      "User-Agent":
-        "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36",
     },
   };
 }
 
-const nuggets = Object.values(process.env).map((value) => {
-  return getNuggetBySecrets(value);
-});
+const nuggets = Object.values(process.env).map((v) => getNuggetBySecrets(v));
 
 module.exports = {
   //掘金
