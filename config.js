@@ -5,23 +5,30 @@ const dipUrl = "https://api.juejin.cn/growth_api/v1/lottery_lucky/dip_lucky";
 const userAgent =
   "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36";
 
-function getNuggetBySecrets(secrets) {
-  const config = secrets.split("|");
+function getNuggetBySecrets(key, value) {
+  const config = value.split("|");
   return {
-    drawUrl, //抽奖
-    signInUrl, //签到
-    historyId: config[2],
-    dipUrl: `${dipUrl}?aid=${config[0]}&uuid=${config[1]}`, //沾喜气
-    headers: {
-      referer,
-      cookie: `${config[3]}`,
-      "User-Agent": userAgent,
-      "Upgrade-Insecure-Requests": 1,
+    key,
+    value: {
+      drawUrl, //抽奖
+      signInUrl, //签到
+      historyId: config[2],
+      dipUrl: `${dipUrl}?aid=${config[0]}&uuid=${config[1]}`, //沾喜气
+      headers: {
+        referer,
+        cookie: `${config[3]}`,
+        "User-Agent": userAgent,
+        "Upgrade-Insecure-Requests": 1,
+      },
     },
   };
 }
 
-const nuggets = Object.values(process.env).map((v) => getNuggetBySecrets(v));
+process.env = { DEACON: "0|1|2|3", CONDEA: "0|1|2|3" };
+
+const nuggets = Object.entries(process.env).map(([key, value]) =>
+  getNuggetBySecrets(key, value)
+);
 
 module.exports = {
   //掘金

@@ -22,46 +22,49 @@ const pushMsg = async (title, content) => {
 /**
  * 签到
  */
-const signRequest = async (nugget) => {
-  const { headers, signInUrl } = nugget; //签到相关参数
-  const res = await axios({
-    url: signInUrl,
-    method: `post`,
-    headers,
+const signRequest = (nuggetValue) => {
+  return new Promise(async (resolve, reject) => {
+    const { headers, signInUrl } = nuggetValue; //签到相关参数
+    const res = await axios({
+      url: signInUrl,
+      method: `post`,
+      headers,
+    });
+    if (res && res.data && res.data.err_no === 0) {
+      resolve();
+      luckDraw(nuggetValue);
+      luckDip(nuggetValue);
+    } else {
+      reject("sign error !");
+    }
   });
-  if (res && res.data && res.data.err_no === 0) {
-    luckDip(nugget);
-    luckDraw(nugget);
-  }
-  pushMsg("signRequest", res.data);
 };
 /**
  * 抽奖
  */
-const luckDraw = async (nugget) => {
-  const { headers, drawUrl } = nugget; //抽奖相关参数
+const luckDraw = async (nuggetValue) => {
+  const { headers, drawUrl } = nuggetValue; //抽奖相关参数
   const res = await axios({
     url: drawUrl,
     method: `post`,
     headers,
   });
-  pushMsg("luckDraw", res.data.data);
 };
 
 /**
  * 沾喜气
  */
-const luckDip = async (nugget) => {
-  const { headers, historyId, dipUrl } = nugget; //抽奖相关参数
+const luckDip = async (nuggetValue) => {
+  const { headers, historyId, dipUrl } = nuggetValue; //抽奖相关参数
   const res = await axios({
     url: dipUrl,
     method: `post`,
     headers,
     data: { lottery_history_id: historyId },
   });
-  pushMsg("luckDip", res.data.data);
 };
 
 nuggets.forEach((nugget) => {
-  signRequest(nugget); //签到函数
+  const { key, value } = nugget;
+  signRequest(value).catch((e) => pushMsg(key, e));
 });
