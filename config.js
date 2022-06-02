@@ -24,8 +24,6 @@ function getNuggetBySecrets(key, value) {
   };
 }
 
-process.env = { DEACON: "0|1|2|3", CONDEA: "0|1|2|3" };
-
 const nuggets = Object.entries(process.env).map(([key, value]) =>
   getNuggetBySecrets(key, value)
 );
