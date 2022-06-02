@@ -10,13 +10,9 @@ const pushMsg = async (title, content) => {
   const { url, token } = pushPlus;
   const res = await axios({
     url,
-    method: `get`,
-    params: {
-      token,
-      template: `json`,
-      title,
-      content,
-    },
+    method: "post",
+    headers: { "Content-Type": "application/json" },
+    data: { token, title, content },
   });
 };
 
@@ -54,9 +50,9 @@ const luckDraw = async (nuggetValue) => {
 const luckDip = async (nuggetValue) => {
   const { headers, historyId, dipUrl } = nuggetValue;
   axios({
-    headers,
     url: dipUrl,
     method: `post`,
+    headers,
     data: { lottery_history_id: historyId },
   });
 };
@@ -64,6 +60,6 @@ const luckDip = async (nuggetValue) => {
 nuggets.forEach((nugget) => {
   const { key, value } = nugget;
   signRequest(value)
-    .then((e) => pushMsg(key, { success: e }))
-    .catch((e) => pushMsg(key, { error: e }));
+    .then((e) => pushMsg(key, e))
+    .catch((e) => pushMsg(key, e));
 });
