@@ -3,7 +3,7 @@ const { nuggets, pushPlus } = require("./config");
 
 /**
  * @param {String} title
- * @param {JSON} content
+ * @param {String} content
  */
 const pushMsg = async (title, content) => {
   //获取配置参数
