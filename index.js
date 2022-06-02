@@ -32,9 +32,9 @@ const signRequest = (nuggetValue) => {
       headers,
     });
     if (res && res.data && res.data.err_no === 0) {
-      resolve();
-      luckDraw(nuggetValue);
+      resolve("sign success !");
       luckDip(nuggetValue);
+      luckDraw(nuggetValue);
     } else {
       reject("sign error !");
     }
@@ -67,5 +67,7 @@ const luckDip = async (nuggetValue) => {
 
 nuggets.forEach((nugget) => {
   const { key, value } = nugget;
-  signRequest(value).catch((e) => pushMsg(key, e));
+  signRequest(value)
+    .then((e) => pushMsg(key, e))
+    .catch((e) => pushMsg(key, e));
 });
