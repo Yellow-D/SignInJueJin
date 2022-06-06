@@ -61,9 +61,12 @@ const luckDip = async (nugget) => {
 const promiseArr = nuggets.map((nugget) => signRequest(nugget));
 
 Promise.allSettled(promiseArr).then((res) => {
-  const str = res
-    .map((resItem) => resItem.reason)
-    .filter((resStr) => resStr.startsWith("Success"))
-    .reduce((resStr1, resStr2) => resStr1 + " & " + resStr2, "JUEJIN:");
+  const str =
+    res
+      .map((resItem) => resItem.reason)
+      .filter((resStr) => resStr.startsWith("Success"))
+      .reduce((resStr1, resStr2) => resStr1 + " & " + resStr2, "JUEJIN:") ||
+    JSON.stringify(res);
+
   pushMsg("title", str);
 });
