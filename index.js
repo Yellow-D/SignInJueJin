@@ -8,13 +8,12 @@ const { nuggets, pushPlus } = require("./config");
 const pushMsg = async (title, content) => {
   //获取配置参数
   const { url, token } = pushPlus;
-  const res = await axios({
+  axios({
     url,
     method: "post",
     headers: { "Content-Type": "application/json" },
     data: { token, title, content },
   });
-  console.log(res);
 };
 
 /**
@@ -61,9 +60,8 @@ const luckDip = async (nugget) => {
 const promiseArr = nuggets.map((nugget) => signRequest(nugget));
 
 Promise.allSettled(promiseArr).then((res) => {
-  const resStr = res
-    .map((resItem) => resItem.reason)
-    .reduce((resStr1, resStr2) => resStr1 + " & " + resStr2);
-  pushMsg("TT", resStr);
-  // console.log(resStr);
+  // const resStr = res
+  //   .map((resItem) => resItem.reason)
+  //   .reduce((resStr1, resStr2) => resStr1 + " & " + resStr2);
+  pushMsg("TT", JSON.stringify(res));
 });
