@@ -63,5 +63,5 @@ Promise.allSettled(promiseArr).then((res) => {
   // const resStr = res
   //   .map((resItem) => resItem.reason)
   //   .reduce((resStr1, resStr2) => resStr1 + " & " + resStr2);
-  pushMsg("TT", JSON.stringify(res));
+  pushMsg("result", JSON.stringify(res));
 });
