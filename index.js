@@ -19,22 +19,14 @@ const pushMsg = async (title, content) => {
 /**
  * 签到
  */
-const signRequest = (nugget) => {
-  return new Promise(async (resolve, reject) => {
+const signRequest = async (nugget) => {
+  try {
     const { headers, signInUrl } = nugget.value;
-    const signResult = await axios({ url: signInUrl, method: `post`, headers });
-    try {
-      if (signResult.data.err_no === 0) {
-        luckDip(nugget);
-        luckDraw(nugget);
-        resolve(`Success ${nugget.key}`);
-      } else {
-        reject(`Error ${nugget.key}`);
-      }
-    } catch {
-      reject(`Error ${nugget.key}`);
-    }
-  });
+    const res = await axios({ url: signInUrl, method: `post`, headers });
+    Promise.resolve({ res, nugget });
+  } catch (err) {
+    Promise.reject({ err, nugget });
+  }
 };
 /**
  * 抽奖
@@ -59,9 +51,16 @@ const luckDip = async (nugget) => {
 
 const promiseArr = nuggets.map((nugget) => signRequest(nugget));
 
-Promise.allSettled(promiseArr).then((res) => {
-  // const resStr = res
-  //   .map((resItem) => resItem.reason)
-  //   .reduce((resStr1, resStr2) => resStr1 + " & " + resStr2);
-  pushMsg("result", JSON.stringify(res));
-});
+Promise.all(promiseArr)
+  .then((res) => {
+    res.map((detail) => {
+      const { res, nugget } = detail;
+      if (!res.data || res.data.err_no !== 0) return;
+      luckDip(nugget);
+      luckDraw(nugget);
+    });
+    pushMsg("T", JSON.stringify(res));
+  })
+  .catch((e) => {
+    pushMsg("F", JSON.stringify(e));
+  });
