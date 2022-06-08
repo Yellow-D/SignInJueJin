@@ -51,16 +51,21 @@ const luckDip = async (nugget) => {
 
 const promiseArr = nuggets.map((nugget) => signRequest(nugget));
 
-Promise.all(promiseArr)
-  .then((res) => {
-    res.map((detail) => {
-      const { res, nugget } = detail;
-      if (!res.data || res.data.err_no !== 0) return;
-      luckDip(nugget);
-      luckDraw(nugget);
-    });
-    pushMsg("T", JSON.stringify(res));
-  })
-  .catch((e) => {
-    pushMsg("F", JSON.stringify(e));
+Promise.allSettled(promiseArr).then((results) => {
+  const messages = [];
+  results.forEach((result) => {
+    if (result.status === "fulfilled") {
+      const res = result.value;
+      if (res.data && res.data.err_no === 0) {
+        luckDip(nugget);
+        luckDraw(nugget);
+      } else {
+        messages.push({ err: res, user: nugget.key });
+      }
+    } else if (result.status === "rejected") {
+      const res = result.reason;
+      messages.push({ err: res, user: nugget.key });
+    }
   });
+  pushMsg("A", JSON.stringify(messages));
+});
