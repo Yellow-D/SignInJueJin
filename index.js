@@ -55,7 +55,7 @@ Promise.allSettled(promiseArr).then((results) => {
   const messages = [];
   results.forEach((result) => {
     if (result.status === "fulfilled") {
-      const res = result.value;
+      const { res, nugget } = result.value;
       if (res.data && res.data.err_no === 0) {
         luckDip(nugget);
         luckDraw(nugget);
@@ -63,9 +63,9 @@ Promise.allSettled(promiseArr).then((results) => {
         messages.push({ err: res, user: nugget.key });
       }
     } else if (result.status === "rejected") {
-      const res = result.reason;
+      const { res, nugget } = result.reason;
       messages.push({ err: res, user: nugget.key });
     }
   });
-  pushMsg("A", JSON.stringify(messages));
+  pushMsg("Have a nice day !", JSON.stringify(messages));
 });
