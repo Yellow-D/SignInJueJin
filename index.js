@@ -23,9 +23,13 @@ const signRequest = async (nugget) => {
   try {
     const { headers, signInUrl } = nugget.value;
     const res = await axios({ url: signInUrl, method: `post`, headers });
-    Promise.resolve({ res, nugget });
+    if (res.data && res.data.err_no === 0) {
+      return Promise.resolve({ res: res.data, nugget });
+    } else {
+      return Promise.reject({ err: res.data, nugget });
+    }
   } catch (err) {
-    Promise.reject({ err, nugget });
+    return Promise.reject({ err, nugget });
   }
 };
 /**
@@ -55,17 +59,15 @@ Promise.allSettled(promiseArr).then((results) => {
   const messages = [];
   results.forEach((result) => {
     if (result.status === "fulfilled") {
+      luckDip(nugget);
+      luckDraw(nugget);
       const { res, nugget } = result.value;
-      if (res.data && res.data.err_no === 0) {
-        luckDip(nugget);
-        luckDraw(nugget);
-      } else {
-        messages.push({ err: res, user: nugget.key });
-      }
+      messages.push({ res, user: nugget.key });
     } else if (result.status === "rejected") {
-      const { res, nugget } = result.reason;
-      messages.push({ err: res, user: nugget.key });
+      const { err, nugget } = result.reason;
+      messages.push({ err, user: nugget.key });
     }
   });
+  // console.log(messages);
   pushMsg("Have a nice day !", JSON.stringify(messages));
 });
