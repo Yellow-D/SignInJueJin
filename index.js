@@ -56,18 +56,22 @@ const luckDip = async (nugget) => {
 const promiseArr = nuggets.map((nugget) => signRequest(nugget));
 
 Promise.allSettled(promiseArr).then((results) => {
-  const messages = [];
-  results.forEach((result) => {
-    if (result.status === "fulfilled") {
-      luckDip(nugget);
-      luckDraw(nugget);
-      const { res, nugget } = result.value;
-      messages.push({ res, user: nugget.key });
-    } else if (result.status === "rejected") {
-      const { err, nugget } = result.reason;
-      messages.push({ err, user: nugget.key });
-    }
-  });
-  // console.log(messages);
-  pushMsg("Have a nice day !", JSON.stringify(messages));
+  try {
+    const messages = [];
+    results.forEach((result) => {
+      if (result.status === "fulfilled") {
+        luckDip(nugget);
+        luckDraw(nugget);
+        const { res, nugget } = result.value;
+        messages.push({ res, user: nugget.key });
+      } else if (result.status === "rejected") {
+        const { err, nugget } = result.reason;
+        messages.push({ err, user: nugget.key });
+      }
+    });
+    // console.log(messages);
+    pushMsg("Have a nice day !", JSON.stringify(messages));
+  } catch (e) {
+    pushMsg("Have a nice day !", JSON.stringify(e));
+  }
 });
