@@ -32,9 +32,10 @@ function getNuggetBySecrets(key, value) {
 //   },
 // };
 
-const nuggets = Object.entries(process.env).map(([key, value]) =>
-  getNuggetBySecrets(key, value)
-);
+const nuggets = [];
+Object.entries(process.env).forEach(([key, value]) => {
+  if (key.startsWith("DEACON")) nuggets.push(getNuggetBySecrets(key, value));
+});
 
 module.exports = {
   //掘金
