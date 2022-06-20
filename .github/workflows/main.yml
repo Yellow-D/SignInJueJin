@@ -28,4 +28,5 @@ jobs:
       run: node index.js
       env:
         DEACON: ${{ secrets.DEACON }}
+        SIGN: ${{ secrets.DEACON }}
 
