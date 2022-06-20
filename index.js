@@ -69,9 +69,8 @@ Promise.allSettled(promiseArr).then((results) => {
         messages.push({ err, user: nugget.key });
       }
     });
-    // console.log(messages);
+    pushMsg("Have a nice day !", JSON.stringify(messages));
+  } catch {
     pushMsg("Have a nice day !", JSON.stringify(results));
-  } catch (e) {
-    pushMsg("Have a nice day !", JSON.stringify(e));
   }
 });
