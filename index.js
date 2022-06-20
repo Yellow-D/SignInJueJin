@@ -70,7 +70,7 @@ Promise.allSettled(promiseArr).then((results) => {
       }
     });
     // console.log(messages);
-    pushMsg("Have a nice day !", JSON.stringify(messages));
+    pushMsg("Have a nice day !", JSON.stringify(results));
   } catch (e) {
     pushMsg("Have a nice day !", JSON.stringify(e));
   }
