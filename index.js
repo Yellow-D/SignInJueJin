@@ -61,11 +61,13 @@ Promise.allSettled(promiseArr).then((results) => {
     results.forEach((result) => {
       if (result.status === "fulfilled") {
         const nugget = result.value;
-        messages.push(`${nugget.key} SUCCESS`);
+        const userName = nugget.key.replace("SIGN_", "");
+        messages.push(`${userName} SUCCESS`);
         luckDip(nugget);
         luckDraw(nugget);
       } else if (result.status === "rejected") {
-        messages.push(`${result.reason.key} FAIL`);
+        const userName = result.reason.key.replace("SIGN_", "");
+        messages.push(`${userName} FAIL`);
       }
     });
     pushMsg("Have a nice day !", JSON.stringify(messages));
