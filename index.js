@@ -23,6 +23,7 @@ const signRequest = async (nugget) => {
   try {
     const { headers, signInUrl } = nugget.value;
     const res = await axios({ url: signInUrl, method: `post`, headers });
+    // console.log(res);
     if (res.data && res.data.err_no === 0) {
       return Promise.resolve(nugget);
     } else {
